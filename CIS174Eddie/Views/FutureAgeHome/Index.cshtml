@@ -1,0 +1,38 @@
+﻿@model FutureAge
+@{
+    ViewBag.Title = "Age Calculator";
+    <!--Home page of Age Calculator-->
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Age Calculator</title>
+</head>
+
+<body>
+    <h1>Age Calculator</h1>
+    <form asp-action="Index" method="post" class="form-horizontal">
+        <main class="container-fluid">
+            <div asp-validation-summary="All"></div>
+            <div class="row">
+                <label asp-for="Name" class="control-label col-sm-2">Name:</label>
+                <input asp-for="Name" class="form-control col-sm-10" />
+            </div>
+            <div class="row">
+                <label asp-for="BirthYear" class="control-label col-sm-2">Birth Year</label>
+                <input asp-for="BirthYear" class="form-control col-sm-10" />
+            </div>
+            <div class="row">
+                <label class="control-label col-sm-10">@ViewBag.Output</label>
+            </div>
+            <button type="submit" class="btn-primary">Calculate</button>
+            <a asp-controller="FutureAgeHome" asp-action="Index">Clear</a>
+        </main>
+    </form>
+    <p></p>
+    <p><a asp-controller="Home" asp-action="Index" class="btn btn-primary">Home</a></p>
+</body>
+</html>

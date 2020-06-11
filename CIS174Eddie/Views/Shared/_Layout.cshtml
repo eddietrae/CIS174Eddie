@@ -1,0 +1,21 @@
+﻿<!DOCTYPE html>
+<!--Default layout of pages. Uses bootstrap for html-->
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/popper.js/cjs/popper.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header class="jumbotron">
+            <h1>@ViewBag.Title</h1>
+        </header> @RenderBody()
+    </div>
+</body>
+</html>
