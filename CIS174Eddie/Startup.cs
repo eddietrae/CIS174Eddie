@@ -68,7 +68,11 @@ namespace CIS174Eddie
 
                 endpoints.MapControllerRoute(
                     name: "custom",
-                    pattern: "{controller}/{action}/{id?}/item{num}");
+                    pattern: "{controller}/{action}/{id?}/item{num}/{slug?}");
+
+                endpoints.MapControllerRoute(
+                    name: "access",
+                    pattern: "{controller}/{action}/{lvl}/{slug?}"); // This route handles access levels
 
                 endpoints.MapControllerRoute(
                     name: "default",

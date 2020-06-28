@@ -1,0 +1,89 @@
+﻿@model Student
+@{
+    ViewBag.Title = "Assignment 6.1";
+
+    // Assigning dummy students to be displayed
+    Student student1 = new Student();
+    student1.FirstName = "Bob";
+    student1.LastName = "Dylan";
+    student1.Grade = "A";
+
+    Student student2 = new Student();
+    student2.FirstName = "Jackie";
+    student2.LastName = "Moon";
+    student2.Grade = "B";
+
+    Student student3 = new Student();
+    student3.FirstName = "Jane";
+    student3.LastName = "Doe";
+    student3.Grade = "C";
+
+    int lvl = ViewBag.lvl; // asp-route-lvl. Access level route parameter
+}
+
+@if (lvl < 2 && lvl > 0) // Logic gates to determine what view to show based on route parameter lvl
+{
+    <h1>You do not have a sufficient access level to view this data.</h1>
+}
+else if (lvl < 8 && lvl >= 2)
+{
+    <h2>Students List</h2>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@student1.FirstName</td>
+                <td>@student1.LastName</td>
+            </tr>
+            <tr>
+                <td>@student2.FirstName</td>
+                <td>@student2.LastName</td>
+            </tr>
+            <tr>
+                <td>@student3.FirstName</td>
+                <td>@student3.LastName</td>
+            </tr>
+        </tbody>
+    </table>
+}
+else if (lvl >= 8 && lvl <= 10) // admin lvls
+{
+    <h1>Hello Admin</h1>
+    <h2>Students List</h2>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Grade</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@student1.FirstName</td>
+                <td>@student1.LastName</td>
+                <td>@student1.Grade</td>
+            </tr>
+            <tr>
+                <td>@student2.FirstName</td>
+                <td>@student2.LastName</td>
+                <td>@student2.Grade</td>
+            </tr>
+            <tr>
+                <td>@student3.FirstName</td>
+                <td>@student3.LastName</td>
+                <td>@student3.Grade</td>
+            </tr>
+        </tbody>
+    </table>
+}
+else // lvl out of range 1-10
+{
+    <h1>Invalid access level</h1>
+}
+
