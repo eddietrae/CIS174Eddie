@@ -45,6 +45,7 @@ namespace CIS174Eddie
             services.AddDbContext<ContactContext>();
             services.AddDbContext<MovieContext>(); // Dependency injection for context object
             services.AddDbContext<CountryContext>();
+            services.AddDbContext<TicketContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -78,7 +79,7 @@ namespace CIS174Eddie
 
                 endpoints.MapControllerRoute(
                     name: "country",
-                    pattern: "{controller}/{action}/{id?}/game/{activeGame}/cat/{activeCat}/{slug?}");
+                    pattern: "{controller=Country}/{action=Index}/{id?}/game/{activeGame}/cat/{activeCat}/{slug?}");
 
                 endpoints.MapControllerRoute(
                     name: "custom",

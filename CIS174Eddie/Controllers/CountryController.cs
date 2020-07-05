@@ -19,27 +19,14 @@ namespace CIS174Eddie.Controllers
             context = ctx;
         }
 
-        public ViewResult Index(string activeGame = "all", string activeCat = "all")
+        public IActionResult Index(CountryListViewModel model)
         {
-            var session = new OlympicSession(HttpContext.Session);
-            session.SetActiveGame(activeGame);
-            session.SetActiveCat(activeCat);
-
-            var model = new CountryListViewModel
-            {
-                ActiveGame = activeGame,
-                ActiveCat = activeCat,
-                Games = context.Games.ToList(),
-                Categories = context.Categories.ToList()
-            };
+            model.Games = context.Games.ToList();
+            model.Categories = context.Categories.ToList();
+            
 
             IQueryable<Country> query = context.Countries;
-            if (activeGame != "all")
-                query = query.Where(
-                    t => t.Game.GameID.ToLower() == activeGame.ToLower());
-            if (activeCat != "all")
-                query = query.Where(
-                    t => t.Category.CategoryID.ToLower() == activeCat.ToLower());
+            
 
             model.Countries = query.ToList();
             return View(model);
