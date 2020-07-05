@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 using CIS174Eddie.Models;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,21 +21,17 @@ namespace CIS174Eddie.Controllers
 
         public ViewResult Index(string activeGame = "all", string activeCat = "all")
         {
-            // Store selected game and category IDs
-            ViewBag.ActiveGame = activeGame;
-            ViewBag.ActiveCat = activeCat;
+            var session = new OlympicSession(HttpContext.Session);
+            session.SetActiveGame(activeGame);
+            session.SetActiveCat(activeCat);
 
-            // Get games and categories from db
-            List<Game> games = context.Games.ToList();
-            List<Category> categories = context.Categories.ToList();
-
-            // Add 'all' value to front of each list
-            games.Insert(0, new Game { GameID = "all", Name = "All" });
-            categories.Insert(0, new Category { CategoryID = "all", Name = "All" });
-
-            // Store lists
-            ViewBag.Games = games;
-            ViewBag.Categories = categories;
+            var model = new CountryListViewModel
+            {
+                ActiveGame = activeGame,
+                ActiveCat = activeCat,
+                Games = context.Games.ToList(),
+                Categories = context.Categories.ToList()
+            };
 
             IQueryable<Country> query = context.Countries;
             if (activeGame != "all")
@@ -43,8 +41,47 @@ namespace CIS174Eddie.Controllers
                 query = query.Where(
                     t => t.Category.CategoryID.ToLower() == activeCat.ToLower());
 
-            var countries = query.ToList();
-            return View(countries);
+            model.Countries = query.ToList();
+            return View(model);
+        }
+
+        public ViewResult Details(string id)
+        {
+            var session = new OlympicSession(HttpContext.Session);
+            var model = new CountryViewModel
+            {
+                Country = context.Countries
+                    .Include(c => c.Game)
+                    .Include(c => c.Category)
+                    .FirstOrDefault(c => c.CountryID == id),
+                ActiveGame = session.GetActiveGame(),
+                ActiveCat = session.GetActiveCat()
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        public RedirectToActionResult Add(CountryViewModel model)
+        {
+            model.Country = context.Countries
+                .Include(c => c.Game)
+                .Include(c => c.Category)
+                .Where(c => c.CountryID == model.Country.CountryID)
+                .FirstOrDefault();
+
+            var session = new OlympicSession(HttpContext.Session);
+            var countries = session.GetMyCountries();
+            countries.Add(model.Country);
+            session.SetMyCountries(countries);
+
+            TempData["message"] = $"{model.Country.Name} added to your favorites";
+
+            return RedirectToAction("Index",
+                new
+                {
+                    ActiveGame = session.GetActiveGame(),
+                    ActiveCat = session.GetActiveCat()
+                });
         }
     }
 }

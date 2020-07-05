@@ -26,7 +26,14 @@ namespace CIS174Eddie
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
+            services.AddMemoryCache();
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromSeconds(60 * 5);
+                options.Cookie.HttpOnly = false;
+                options.Cookie.IsEssential = true;
+            });
+            services.AddControllersWithViews().AddNewtonsoftJson();
 
             // URL Slugs
             services.AddRouting(options =>
@@ -60,6 +67,8 @@ namespace CIS174Eddie
 
             app.UseAuthorization();
 
+            app.UseSession();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapAreaControllerRoute(
@@ -69,7 +78,7 @@ namespace CIS174Eddie
 
                 endpoints.MapControllerRoute(
                     name: "country",
-                    pattern: "{controller}/{action}/game/{activeGame}/cat/{activeCat}/{slug?}");
+                    pattern: "{controller}/{action}/{id?}/game/{activeGame}/cat/{activeCat}/{slug?}");
 
                 endpoints.MapControllerRoute(
                     name: "custom",
@@ -77,11 +86,16 @@ namespace CIS174Eddie
 
                 endpoints.MapControllerRoute(
                     name: "access",
-                    pattern: "{controller}/{action}/{lvl}/{slug?}"); // This route handles access levels
+                    pattern: "{controller}/{action}/lvl{lvl}/{slug?}"); // This route handles access levels
+
+                endpoints.MapControllerRoute(
+                    name: "details",
+                    pattern: "{controller}/{action}/{id}/{slug?}");
 
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}/{slug?}"); // Added slug
+
             });
         }
     }
