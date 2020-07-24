@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using CIS174Eddie.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 
 namespace CIS174Eddie
@@ -46,6 +47,15 @@ namespace CIS174Eddie
             services.AddDbContext<MovieContext>(); // Dependency injection for context object
             services.AddDbContext<CountryContext>();
             services.AddDbContext<TicketContext>();
+
+            services.AddIdentity<User, IdentityRole>(options =>
+            {
+                options.Password.RequireDigit = false;
+                options.Password.RequiredLength = 6;
+                options.Password.RequireNonAlphanumeric = false;
+            })
+                .AddEntityFrameworkStores<TicketContext>()
+                .AddDefaultTokenProviders();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -65,8 +75,10 @@ namespace CIS174Eddie
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            
+            app.UseAuthentication();
             app.UseAuthorization();
+            
 
             app.UseSession();
 
@@ -92,7 +104,9 @@ namespace CIS174Eddie
                 endpoints.MapControllerRoute(
                     name: "details",
                     pattern: "{controller}/{action}/{id}/{slug?}");
-
+                endpoints.MapControllerRoute(
+                    name: "login",
+                    pattern: "{controller=Account}/{action}/{ReturnUrl}");
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}/{slug?}"); // Added slug

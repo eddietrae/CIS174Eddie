@@ -3,16 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CIS174Eddie.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace CIS174Eddie.Controllers
 {
+    [Authorize]
     public class TicketController : Controller
     {
         private TicketContext context;
         public TicketController(TicketContext ctx) => context = ctx;
-
+        
         public IActionResult Index(string id)
         {
             var filters = new Filters(id);
@@ -33,7 +36,7 @@ namespace CIS174Eddie.Controllers
             var tickets = query.OrderBy(t => t.Status).ToList();
             return View(tickets);
         }
-
+        
         [HttpGet] // The Add methods add tickets with the Add view
         public IActionResult Add()
         {
@@ -41,7 +44,7 @@ namespace CIS174Eddie.Controllers
             ViewBag.Statuses = context.Statuses.ToList();
             return View();
         }
-
+        
         [HttpPost]
         public IActionResult Add(Ticket ticket)
         {

@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace CIS174Eddie.Models
 {
-    public class TicketContext : DbContext
+    public class TicketContext : IdentityDbContext<User>
     {
         public TicketContext(DbContextOptions<TicketContext> options)
             : base(options) { }
@@ -22,6 +24,7 @@ namespace CIS174Eddie.Models
         // Seeding. These will be drop down/select items for each ticket
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Point>().HasData(
                 new Point { PointId = "1", PointValue = "1" },
                 new Point { PointId = "2", PointValue = "2" },
