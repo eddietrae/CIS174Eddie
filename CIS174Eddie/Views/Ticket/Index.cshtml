@@ -19,7 +19,7 @@
                     <option value="all">All</option>
                 </select>
             </div>
-            <button type="submit" class="btn btn-primary">Filter</button>
+            <submit-button class="mr-2">Filter</submit-button>
             <a asp-action="Index" asp-route-id="" class="btn btn-primary">Clear</a>
         </form>
     </div>
@@ -51,13 +51,9 @@
 
                             <input type="hidden" name="@nameof(Ticket.Id)" value="@ticket.Id" />
 
-                            <button type="submit" name="@nameof(Ticket.Status.Name)" value="Done"
-                                    class="btn btn-primary btn-sm">Completed
-                            </button>
+                            <submit-button name="@nameof(Ticket.Status.Name)" value="Done">Completed</submit-button>
 
-                            <button type="submit"
-                                    class="btn btn-primary btn-sm">Delete
-                            </button>
+                            <submit-button>Delete</submit-button>
                         </form>
                     </td>
                 </tr>
